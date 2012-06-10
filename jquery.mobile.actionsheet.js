@@ -11,7 +11,8 @@
 	$.widget("mobile.actionsheet",$.mobile.widget,{
 		options: {
 			ok: undefined,
-			cancel: undefined
+			cancel: undefined,
+			block: true //true: wallpaper ignore click. false: click wallpaper to close
 		},
 		ok_call: undefined,
 		cancel_call: undefined,
@@ -20,6 +21,7 @@
 		_init: function() {
 			this.ok_call = this.options.ok;
 			this.cancel_call = this.options.cancel;
+			this.block = this.options.block;
 			//console.log("ok: "+this.ok_call);
 			//console.log("cancel: "+this.cancel_call);
 			
@@ -67,7 +69,12 @@
 			this.wallpaper = $('<div>', {'class':'ui-actionsheet-wallpaper'}).appendTo(cc).show();
 			
 			//window.setTimeout($.proxy(this._wbc, this), 500);
-			this.wallpaper.bind("click",$.proxy(function(e) { e.preventDefault();/*this.close();*/ },this));
+			this.wallpaper.bind("click",$.proxy(function(e) { 
+				if (this.block)
+					e.preventDefault();
+				else
+					this.close(); 
+				},this));
 			this._positionContent();
 
 			$(window).bind('orientationchange.actionsheet',$.proxy(function () {
